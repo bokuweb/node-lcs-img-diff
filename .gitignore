@@ -1,0 +1,7 @@
+dist
+node_modules
+target
+.DS_Store
+index.js
+test/actual
+reg.json
