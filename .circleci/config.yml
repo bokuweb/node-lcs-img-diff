@@ -15,5 +15,6 @@ jobs:
           name: Test
           command: |
             npm i
+            cargo +nightly install wasm-bindgen-cli
             make build
             npm t   
