@@ -1,6 +1,8 @@
 # node-lcs-img-diff
 Image diff tool with LCS algorithm. port of [murooka/go-diff-image](https://github.com/murooka/go-diff-image)
 
+[![CircleCI](https://circleci.com/gh/bokuweb/node-lcs-img-diff.svg?style=svg)](https://circleci.com/gh/bokuweb/node-lcs-img-diff)
+
 ## Requirements
 - Node.js v8+
 
