@@ -1,0 +1,19 @@
+defaults: &defaults
+  working_directory: ~/lcs-img-diff
+  docker:
+    - image: bokuweb/amazonlinux-neon
+      environment:
+        DISPLAY: ":99"
+
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout  
+      - run:
+          name: Test
+          command: |
+            yarn install
+            make build
+            yarn test   
