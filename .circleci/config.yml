@@ -17,8 +17,6 @@ jobs:
             curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable && \
             PATH="/root/.cargo/bin:$PATH" rustup install stable && \
             PATH="/root/.cargo/bin:$PATH" rustup install nightly
-            yum install -y bzip2-devel gcc gcc-c++ libgcc cmake wget git openssl-devel readline-devel sqlite-devel zip \
-            && yum clean all
-            npm i
+            apt-get install -y bzip2-devel gcc gcc-c++ libgcc cmake wget git openssl-devel readline-devel sqlite-devel zip            npm i
             make build
             npm t   
