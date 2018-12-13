@@ -14,6 +14,7 @@ jobs:
       - run:
           name: Test
           command: |
+            npm i -g yarn
             yarn install
             make build
             yarn test   
