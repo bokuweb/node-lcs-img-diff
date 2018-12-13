@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/lcs-img-diff
   docker:
-    - image: rust
+    - image: node
       environment:
         DISPLAY: ":99"
 
@@ -14,10 +14,11 @@ jobs:
       - run:
           name: Test
           command: |
-            wget http://nodejs.org/dist/v8.10.0/node-v8.10.0.tar.gz && \
-            tar -zxvf node-v8.10.0.tar.gz && \
-            cd node-v8.10.0 && ./configure && make && \
-            make install
+            curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable && \
+            PATH="/root/.cargo/bin:$PATH" rustup install stable && \
+            PATH="/root/.cargo/bin:$PATH" rustup install nightly
+            yum install -y bzip2-devel gcc gcc-c++ libgcc cmake wget git openssl-devel readline-devel sqlite-devel zip \
+            && yum clean all
             npm i
             make build
             npm t   
