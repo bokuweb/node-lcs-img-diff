@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/lcs-img-diff
   docker:
-    - image: node
+    - image: parity/rust
       environment:
         DISPLAY: ":99"
 
@@ -14,9 +14,6 @@ jobs:
       - run:
           name: Test
           command: |
-            curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable && \
-            export PATH="$HOME/.cargo/bin:$PATH" rustup install stable && \
-            export PATH="$HOME/.cargo/bin:$PATH" rustup install nightly
             npm i
             make build
             npm t   
