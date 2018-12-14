@@ -6,8 +6,9 @@
   "author": "bokuweb",
   "license": "MIT",
   "scripts": {
+    "prepublish": "npm run build",
     "lint": "tslint --fix --force --format stylish --project ./tsconfig.json ./{src,__tests__}/**/*.{ts,tsx}",
-    "build": "tsc -p tsconfig.json",
+    "build": "make build && tsc -p tsconfig.json",
     "test": "ts-node ./ test/images/before.png test/images/after.png --dist test/actual && reg-cli test/actual test/expected test/diff"
   },
   "devDependencies": {
@@ -27,6 +28,10 @@
     "make-dir": "^1.3.0",
     "yargs": "^12.0.5"
   },
+  "files": [
+    "dist",
+    "index.js"
+  ],
   "bin": {
     "lcs-img-diff": "./index.js"
   }
