@@ -1,6 +1,6 @@
 {
   "name": "lcs-img-diff",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "index.js",
   "repository": "https://github.com/bokuweb/node-lcs-img-diff.git",
   "author": "bokuweb",
