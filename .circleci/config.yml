@@ -15,7 +15,7 @@ jobs:
           name: Install node
           command: |
             apt-get update
-            apt-get install nodejs -y
+            apt-get install nodejs npm -y
       - run:
           name: Test
           command: |
