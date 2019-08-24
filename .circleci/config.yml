@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/lcs-img-diff
   docker:
-    - image: parity/rust
+    - image: bokuweb/amazonlinux-neon
       environment:
         DISPLAY: ":99"
 
