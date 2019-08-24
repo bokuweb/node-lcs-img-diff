@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/lcs-img-diff
   docker:
-    - image: rust
+    - image: rust:latest
       environment:
         DISPLAY: ":99"
 
@@ -14,7 +14,8 @@ jobs:
       - run:
           name: Install node
           command: |
-            apt-get install -y nodejs
+            apt-get update
+            apt-get install nodejs -y
       - run:
           name: Test
           command: |
