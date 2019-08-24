@@ -19,6 +19,7 @@ jobs:
       - run:
           name: Test
           command: |
+            rustup toolchain install nightly
             npm i
             cargo +nightly install wasm-bindgen-cli
             make build
