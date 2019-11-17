@@ -4,7 +4,7 @@ import * as yargs from 'yargs';
 import { readFile, writeFile } from 'fs';
 import { promisify } from 'util';
 import makeDir from 'make-dir';
-import { diff } from './dist/node_lcs_img_diff';
+import { compare } from './pkg/node_lcs_img_diff';
 
 const read = promisify(readFile);
 const write = promisify(writeFile);
@@ -50,7 +50,7 @@ function createOptions() {
 async function cli() {
   const options = createOptions();
   const [before, after] = await Promise.all([read(options.before), read(options.after)]);
-  const res = JSON.parse(diff(before, after));
+  const res = JSON.parse(compare(before, after));
   await makeDir(options.dist);
   const beforeFilename = options.prefix + '_' + path.basename(options.before, path.extname(options.before)) + '.png';
   const afterFilename = options.prefix + '_' + path.basename(options.after, path.extname(options.after)) + '.png';

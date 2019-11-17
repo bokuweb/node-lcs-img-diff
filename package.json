@@ -8,7 +8,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "lint": "tslint --fix --force --format stylish --project ./tsconfig.json ./{src,__tests__}/**/*.{ts,tsx}",
-    "build": "make build && tsc -p tsconfig.json",
+    "build": "wasm-pack build --target nodejs",
     "test": "ts-node ./ test/images/before.png test/images/after.png --dist test/actual && reg-cli test/actual test/expected test/diff"
   },
   "devDependencies": {
@@ -22,7 +22,8 @@
     "tslint-config-google": "^1.0.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "@wasm-tool/wasm-pack-plugin": "1.0.1"
   },
   "dependencies": {
     "make-dir": "^1.3.0",

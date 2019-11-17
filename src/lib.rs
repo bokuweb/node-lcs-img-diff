@@ -1,6 +1,7 @@
-#![feature(custom_attribute)]
+mod diff;
 
 use base64::encode;
+use diff::*;
 use image::*;
 use serde_derive::*;
 use wasm_bindgen::prelude::*;
@@ -91,18 +92,18 @@ fn to_png(img: &DynamicImage) -> Vec<u8> {
 }
 
 #[wasm_bindgen]
-pub fn diff(before: &[u8], after: &[u8]) -> String {
+pub fn compare(before: &[u8], after: &[u8]) -> String {
     let mut before = load_from_memory(before).expect("Unable to load image from memory");
     let mut after = load_from_memory(after).expect("Unable to load image from memory");
     let encoded_before = create_encoded_rows(&before.raw_pixels(), before.dimensions().0 as usize);
     let encoded_after = create_encoded_rows(&after.raw_pixels(), after.dimensions().0 as usize);
-    let result = lcs_diff::diff(&encoded_before, &encoded_after);
+    let result = diff(&encoded_before, &encoded_after);
     let mut added: Vec<usize> = Vec::new();
     let mut removed: Vec<usize> = Vec::new();
     for d in result.iter() {
         match d {
-            &lcs_diff::DiffResult::Added(ref a) => added.push(a.new_index.unwrap()),
-            &lcs_diff::DiffResult::Removed(ref r) => removed.push(r.old_index.unwrap()),
+            &DiffResult::Added(ref a) => added.push(a.new_index.unwrap()),
+            &DiffResult::Removed(ref r) => removed.push(r.old_index.unwrap()),
             _ => (),
         }
     }
@@ -110,6 +111,7 @@ pub fn diff(before: &[u8], after: &[u8]) -> String {
     create_marked_image(&mut before, (255, 119, 119), RATE, &removed);
     serde_json::to_string(&Result {
         after: to_png(&after),
-        before: to_png(&before)
-    }).unwrap()
+        before: to_png(&before),
+    })
+    .unwrap()
 }
