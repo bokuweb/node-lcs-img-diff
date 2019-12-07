@@ -1,6 +1,5 @@
 mod diff;
 
-use base64::encode;
 use diff::*;
 use image::*;
 use serde_derive::*;
@@ -37,8 +36,10 @@ fn compute_range(r: &Vec<usize>) -> Vec<(usize, usize)> {
     ranges
 }
 
-fn create_encoded_rows(buf: &[u8], width: usize) -> Vec<String> {
-    buf.chunks(width * 4).map(|chunk| encode(chunk)).collect()
+fn create_encoded_rows<'a>(buf: &'a [u8], width: usize) -> Vec<Comparable<'a>> {
+    buf.chunks(width * 4)
+        .map(|c| Comparable { buf: c })
+        .collect()
 }
 
 fn blend_diff_area<G>(img: &mut G, ranges: Vec<(usize, usize)>, rgb: (u8, u8, u8), rate: f32)
@@ -91,13 +92,34 @@ fn to_png(img: &DynamicImage) -> Vec<u8> {
     buf
 }
 
+struct Comparable<'a> {
+    buf: &'a [u8],
+}
+
+impl<'a> PartialEq for Comparable<'a> {
+    fn eq(&self, other: &Self) -> bool {
+        if self.buf.len() != other.buf.len() {
+            return false;
+        }
+        for i in 0..self.buf.len() {
+            if self.buf[i] != other.buf[i] {
+                return false;
+            }
+        }
+        true
+    }
+}
+
 #[wasm_bindgen]
 pub fn compare(before: &[u8], after: &[u8]) -> String {
     let mut before = load_from_memory(before).expect("Unable to load image from memory");
     let mut after = load_from_memory(after).expect("Unable to load image from memory");
-    let encoded_before = create_encoded_rows(&before.raw_pixels(), before.dimensions().0 as usize);
-    let encoded_after = create_encoded_rows(&after.raw_pixels(), after.dimensions().0 as usize);
-    let result = diff(&encoded_before, &encoded_after);
+    let ap = &after.raw_pixels();
+    let bp = &before.raw_pixels();
+    let b = create_encoded_rows(bp, before.dimensions().0 as usize);
+    let a = create_encoded_rows(ap, after.dimensions().0 as usize);
+
+    let result = diff(&b, &a);
     let mut added: Vec<usize> = Vec::new();
     let mut removed: Vec<usize> = Vec::new();
     for d in result.iter() {
