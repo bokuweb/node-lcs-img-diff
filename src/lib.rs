@@ -36,7 +36,7 @@ fn compute_range(r: &Vec<usize>) -> Vec<(usize, usize)> {
     ranges
 }
 
-fn create_encoded_rows<'a>(buf: &'a [u8], width: usize) -> Vec<Comparable<'a>> {
+fn create_comparable<'a>(buf: &'a [u8], width: usize) -> Vec<Comparable<'a>> {
     buf.chunks(width * 4)
         .map(|c| Comparable { buf: c })
         .collect()
@@ -114,12 +114,12 @@ impl<'a> PartialEq for Comparable<'a> {
 pub fn compare(before: &[u8], after: &[u8]) -> String {
     let mut before = load_from_memory(before).expect("Unable to load image from memory");
     let mut after = load_from_memory(after).expect("Unable to load image from memory");
-    let ap = &after.raw_pixels();
-    let bp = &before.raw_pixels();
-    let b = create_encoded_rows(bp, before.dimensions().0 as usize);
-    let a = create_encoded_rows(ap, after.dimensions().0 as usize);
+    let before_pixels = &before.raw_pixels();
+    let after_pixels = after.raw_pixels();
+    let before_comparable = create_comparable(&before_pixels, before.dimensions().0 as usize);
+    let after_comparable = create_comparable(&after_pixels, after.dimensions().0 as usize);
 
-    let result = diff(&b, &a);
+    let result = diff(&before_comparable, &after_comparable);
     let mut added: Vec<usize> = Vec::new();
     let mut removed: Vec<usize> = Vec::new();
     for d in result.iter() {
